@@ -1,0 +1,29 @@
+{
+	"inbounds":[
+		{
+			"port":31304,
+			"listen":"127.0.0.1",
+			"protocol":"trojan",
+			"tag":"TrojangRPC",
+			"settings":{
+				"clients":[
+					{
+						"password":"c0087810-7003-4a6c-b0b6-631e6b9613ec",
+						"email":"dknetid_trojan"
+					}
+				],
+				"fallbacks":[
+					{
+						"dest":"31300"
+					}
+				]
+			},
+			"streamSettings":{
+				"network":"grpc",
+				"grpcSettings":{
+					"serviceName":"dknet"
+				}
+			}
+		}
+	]
+}

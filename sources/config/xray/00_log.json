@@ -1,0 +1,6 @@
+{
+    "log": {
+        "error": "/var/log/xray.log",
+        "loglevel": "debug"
+    }
+}

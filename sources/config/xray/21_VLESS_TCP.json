@@ -1,0 +1,79 @@
+{
+	"inbounds":[
+		{
+			"port":443,
+			"protocol":"vless",
+			"settings":{
+				"clients":[
+					{
+						"id":"c0087810-7003-4a6c-b0b6-631e6b9613ec"
+					}
+				],
+				"decryption":"none",
+				"fallbacks":[
+					{
+						"dest":31296,
+						"xver":1
+					},
+					{
+						"alpn":"h2",
+						"dest":31302,
+						"xver":0
+					}
+				]
+			},
+			"streamSettings":{
+				"network":"tcp",
+				"tcpSettings": {
+					"path": "/dknet",
+					"headers": {
+						"Host": ""
+					}
+				},
+				"quicSettings": {},
+				"sockopt": {
+					"mark": 0,
+					"tcpFastOpen": true
+				},
+				"sniffing": {
+				  "enabled": true,
+				  "destOverride": [
+					"http",
+					"tls"
+				  ]
+				},
+				"security":"tls",
+				"tlsSettings": {
+					"minVersion":"1.2",
+					"alpn":[
+						"http/1.1",
+						"h2"
+					],
+					"certificates":[
+						{
+							"certificateFile":"/opt/xray/certs/certificate.crt",
+							"keyFile":"/opt/xray/certs/private.key",
+							"ocspStapling":3600,
+							"usage":"encipherment"
+						}
+					]
+				},
+				"xtlsSettings":{
+					"minVersion":"1.2",
+					"alpn":[
+						"http/1.1",
+						"h2"
+					],
+					"certificates":[
+						{
+							"certificateFile":"/opt/xray/certs/certificate.crt",
+							"keyFile":"/opt/xray/certs/private.key",
+							"ocspStapling":3600,
+							"usage":"encipherment"
+						}
+					]
+				}
+			}
+		}
+	]
+}

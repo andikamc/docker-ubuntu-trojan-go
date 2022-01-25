@@ -1,0 +1,38 @@
+#!/bin/sh
+set -e
+
+# xray start basepath
+mv /tmp/xray /opt/xray/conf
+mkdir -p /opt/xray/logs
+mkdir -p /opt/xray/certs
+mkdir -p /opt/xray/tmp
+
+# create xray as background
+echo "[Unit]" > /etc/systemd/system/xray.service
+echo "Description=Xray - Penetrates Everything." >> /etc/systemd/system/xray.service
+echo "After=network.target network-online.target nss-lookup.target" >> /etc/systemd/system/xray.service
+echo "Wants=network-online.target" >> /etc/systemd/system/xray.service
+echo "" >> /etc/systemd/system/xray.service
+echo "[Service]" >> /etc/systemd/system/xray.service
+echo "Type=simple" >> /etc/systemd/system/xray.service
+echo "CapabilityBoundingSet=CAP_NET_BIND_SERVICE CAP_NET_RAW" >> /etc/systemd/system/xray.service
+echo "NoNewPrivileges=yes" >> /etc/systemd/system/xray.service
+echo "StandardError=journal" >> /etc/systemd/system/xray.service
+echo "ExecStart=/opt/xray/xray run --confdir /opt/xray/conf" >> /etc/systemd/system/xray.service
+echo "TimeoutSec=0" >> /etc/systemd/system/xray.service
+echo "KillMode=process" >> /etc/systemd/system/xray.service
+echo "StandardOutput=tty" >> /etc/systemd/system/xray.service
+echo "RemainAfterExit=yes" >> /etc/systemd/system/xray.service
+echo "Restart=on-failure" >> /etc/systemd/system/xray.service
+echo "RestartSec=3s" >> /etc/systemd/system/xray.service
+echo "" >> /etc/systemd/system/xray.service
+echo "[Install]" >> /etc/systemd/system/xray.service
+echo "WantedBy=multi-user.target" >> /etc/systemd/system/xray.service
+chmod 644 /etc/systemd/system/xray.service
+
+# enable xray startup
+systemctl enable xray
+
+# Create certificate
+openssl genrsa -out /opt/xray/certs/private.key 2048
+openssl req -new -x509 -days 3650 -key /opt/xray/certs/private.key -out /opt/xray/certs/certificate.crt -subj "/C=ID/CN=dknet"
