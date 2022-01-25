@@ -1,4 +1,4 @@
-FROM sadaindonesia/ubuntu-baseline:bionic
+FROM andikamc/ubuntu-baseline:bionic
 ADD /sources/images/xray-linux-64.tar.gz /opt/xray
 
 # Update package list
