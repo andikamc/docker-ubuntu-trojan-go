@@ -35,4 +35,4 @@ systemctl enable xray
 
 # Create certificate
 openssl genrsa -out /opt/xray/certs/private.key 2048
-openssl req -new -x509 -days 3650 -key /opt/xray/certs/private.key -out /opt/xray/certs/certificate.crt -subj "/C=ID/CN=dknet"
+openssl req -new -x509 -days 3650 -key /opt/xray/certs/private.key -out /opt/xray/certs/certificate.crt -subj "/C=ID/CN=xray.dknet.my.id"
