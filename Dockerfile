@@ -11,6 +11,7 @@ ADD /sources/commands /tmp
 RUN dos2unix /tmp/configure-* && \
     chmod +x /tmp/configure-* && \
     sh -c /tmp/configure-xray && \
+    sh -c /tmp/configure-udpgw && \
     sh -c /tmp/configure-nginx
 
 # Clear Temp
