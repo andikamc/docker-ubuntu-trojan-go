@@ -1,0 +1,23 @@
+#!/bin/sh
+set -e
+
+# Install cmake
+apt install -y cmake socat
+
+# Install Badvpn
+git clone https://github.com/ambrop72/badvpn.git
+cd badvpn
+mkdir -p build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_NOTHING_BY_DEFAULT=1 -DBUILD_UDPGW=1
+(cd udpgw && make && make install)
+
+# Create listener for udpgw
+sed -i "$ i\screen -dmS udpgw700 badvpn-udpgw --listen-addr 0.0.0.0:7000 --max-clients 500" /etc/userd.local
+sed -i "$ i\screen -dmS udpgw7100tcp socat TCP-LISTEN:7100,fork,reuseaddr TCP:127.0.0.1:7000" /etc/userd.local
+sed -i "$ i\screen -dmS udpgw7100tcp socat TCP-LISTEN:7100,fork,reuseaddr TCP:127.0.0.1:7000" /etc/userd.local
+sed -i "$ i\screen -dmS udpgw7100udp socat UDP-LISTEN:7100,fork,reuseaddr UDP:127.0.0.1:7000" /etc/userd.local
+sed -i "$ i\screen -dmS udpgw7200tcp socat TCP-LISTEN:7200,fork,reuseaddr TCP:127.0.0.1:7000" /etc/userd.local
+sed -i "$ i\screen -dmS udpgw7200udp socat UDP-LISTEN:7200,fork,reuseaddr UDP:127.0.0.1:7000" /etc/userd.local
+sed -i "$ i\screen -dmS udpgw7300tcp socat TCP-LISTEN:7300,fork,reuseaddr TCP:127.0.0.1:7000" /etc/userd.local
+sed -i "$ i\screen -dmS udpgw7300udp socat UDP-LISTEN:7300,fork,reuseaddr UDP:127.0.0.1:7000" /etc/userd.local
