@@ -22,7 +22,7 @@
 				"network":"grpc",
 				"security": "none",
 				"grpcSettings":{
-					"serviceName":"dknet"
+					"serviceName":"dknettrojangrpc"
 				}
 			}
 		}
