@@ -33,7 +33,7 @@
        "idle_timeout": 60
     },
     "websocket": {
-       "enabled": false,
+       "enabled": true,
        "path": "/dkws",
        "host": "ws.dknet.my.id"
     },
