@@ -2,7 +2,7 @@ name: Docker Image Autopilot Build Push after Push
 
 on:
   push:
-    branches: [ master ]
+    branches: [ bionic ]
 
 jobs:
   push_to_registry:
