@@ -1,11 +1,10 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -e
 
 # 
-mkdir /etc/trojan-go
 mkdir /opt/trojan-go
 wget -N --no-check-certificate https://github.com/p4gefau1t/trojan-go/releases/download/$(curl -fsSL https://api.github.com/repos/p4gefau1t/trojan-go/releases | grep '"tag_name":' | head -n 1 | sed -E 's/.*"([^"]+)".*/\1/')/trojan-go-linux-amd64.zip && unzip -d /opt/trojan-go/ ./trojan-go-linux-amd64.zip && chmod +x /opt/trojan-go/trojan-go && rm -rf ./trojan-go-linux-amd64.zip
+rm -rf /opt/trojan-go/example
 mv /tmp/trojan-go/config /opt/trojan-go/config
-mv /tmp/trojan-go/certificate /opt/trojan-go/certificate
-mv /tmp/trojan-go/trojan-go@.service /etc/systemd/system/trojan-go@.service
-systemctl enable trojan-go@config
+mv /tmp/trojan-go/trojan-go.service /etc/systemd/system/trojan-go.service
+systemctl enable trojan-go

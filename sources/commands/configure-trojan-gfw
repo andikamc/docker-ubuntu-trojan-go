@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+
+# Environment
+VERSION=$(curl -fsSL https://api.github.com/repos/trojan-gfw/trojan/releases/latest | grep tag_name | sed -E 's/.*"v(.*)".*/\1/')
+TARBALL="trojan-$VERSION-linux-amd64.tar.xz"
+DOWNLOADURL="https://github.com/trojan-gfw/trojan/releases/download/v$VERSION/$TARBALL"
+UUID="c0087810-7003-4a6c-b0b6-631e6b9613ec"
+
+# Download Trojan
+cd /tmp
+wget -q --show-progress "$DOWNLOADURL"
+
+# Unpack & Install
+tar xf "$TARBALL"
+cd "trojan"
+install -Dm755 "trojan" "/usr/bin/trojan"
+
+# Configure Trojan Service
+echo "[Unit]" > /etc/systemd/system/trojan-gfw.service
+echo "Description=Trojan GFW" >> /etc/systemd/system/trojan-gfw.service
+echo "After=network.target network-online.target nss-lookup.target" >> /etc/systemd/system/trojan-gfw.service
+echo "[Service]" >> /etc/systemd/system/trojan-gfw.service
+echo "Type=simple" >> /etc/systemd/system/trojan-gfw.service
+echo "StandardError=journal" >> /etc/systemd/system/trojan-gfw.service
+echo "ExecStart=/usr/bin/trojan -c /opt/trojan/config.json" >> /etc/systemd/system/trojan-gfw.service
+echo "ExecReload=/bin/kill -HUP \$MAINPID" >> /etc/systemd/system/trojan-gfw.service
+echo "LimitNOFILE=65536" >> /etc/systemd/system/trojan-gfw.service
+echo "KillMode=process" >> /etc/systemd/system/trojan-gfw.service
+echo "Restart=on-failure" >> /etc/systemd/system/trojan-gfw.service
+echo "RestartSec=1s" >> /etc/systemd/system/trojan-gfw.service
+echo "[Install]" >> /etc/systemd/system/trojan-gfw.service
+echo "WantedBy=multi-user.target" >> /etc/systemd/system/trojan-gfw.service
+
+# Configure Trojan Configuration
+mkdir -p /opt/trojan
+echo "{" > /opt/trojan/config.json
+echo "\"run_type\": \"server\"," >> /opt/trojan/config.json
+echo "\"local_addr\": \"0.0.0.0\"," >> /opt/trojan/config.json
+echo "\"local_port\": 443," >> /opt/trojan/config.json
+echo "\"remote_addr\": \"127.0.0.1\"," >> /opt/trojan/config.json
+echo "\"remote_port\": 81," >> /opt/trojan/config.json
+echo "\"password\": [" >> /opt/trojan/config.json
+echo "\"$UUID\"" >> /opt/trojan/config.json
+echo "]," >> /opt/trojan/config.json
+echo "\"log_level\": 1," >> /opt/trojan/config.json
+echo "\"ssl\": {" >> /opt/trojan/config.json
+echo "\"cert\": \"/opt/certificates/fullchain.crt\"," >> /opt/trojan/config.json
+echo "\"key\": \"/opt/certificates/private.key\"," >> /opt/trojan/config.json
+echo "\"key_password\": \"\"," >> /opt/trojan/config.json
+echo "\"cipher\": \"ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ALL\"," >> /opt/trojan/config.json
+echo "\"cipher_tls13\": \"TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384:ALL\"," >> /opt/trojan/config.json
+echo "\"prefer_server_cipher\": true," >> /opt/trojan/config.json
+echo "\"alpn\": [" >> /opt/trojan/config.json
+echo "\"dot\"," >> /opt/trojan/config.json
+echo "\"acme-tls/1\"," >> /opt/trojan/config.json
+echo "\"h2\", \"h2c\", \"h3\"," >> /opt/trojan/config.json
+echo "\"spdy/1\", \"spdy/2\", \"spdy/3\"," >> /opt/trojan/config.json
+echo "\"http/0.9\", \"http/1.0\", \"http/1.1\"" >> /opt/trojan/config.json
+echo "]," >> /opt/trojan/config.json
+echo "\"alpn_port_override\": {" >> /opt/trojan/config.json
+echo "\"h2\": 81" >> /opt/trojan/config.json
+echo "}," >> /opt/trojan/config.json
+echo "\"reuse_session\": true," >> /opt/trojan/config.json
+echo "\"session_ticket\": false," >> /opt/trojan/config.json
+echo "\"session_timeout\": 600," >> /opt/trojan/config.json
+echo "\"plain_http_response\": \"\"," >> /opt/trojan/config.json
+echo "\"curves\": \"\"," >> /opt/trojan/config.json
+echo "\"dhparam\": \"\"" >> /opt/trojan/config.json
+echo "}," >> /opt/trojan/config.json
+echo "\"tcp\": {" >> /opt/trojan/config.json
+echo "\"prefer_ipv4\": true," >> /opt/trojan/config.json
+echo "\"no_delay\": true," >> /opt/trojan/config.json
+echo "\"keep_alive\": true," >> /opt/trojan/config.json
+echo "\"reuse_port\": false," >> /opt/trojan/config.json
+echo "\"fast_open\": true," >> /opt/trojan/config.json
+echo "\"fast_open_qlen\": 20" >> /opt/trojan/config.json
+echo "}," >> /opt/trojan/config.json
+echo "\"mysql\": {" >> /opt/trojan/config.json
+echo "\"enabled\": false," >> /opt/trojan/config.json
+echo "\"server_addr\": \"127.0.0.1\"," >> /opt/trojan/config.json
+echo "\"server_port\": 3306," >> /opt/trojan/config.json
+echo "\"database\": \"trojan\"," >> /opt/trojan/config.json
+echo "\"username\": \"trojan\"," >> /opt/trojan/config.json
+echo "\"password\": \"\"," >> /opt/trojan/config.json
+echo "\"key\": \"\"," >> /opt/trojan/config.json
+echo "\"cert\": \"\"," >> /opt/trojan/config.json
+echo "\"ca\": \"\"" >> /opt/trojan/config.json
+echo "}" >> /opt/trojan/config.json
+echo "}" >> /opt/trojan/config.json
+
+# Enable Trojan Service
+systemctl enable trojan-gfw

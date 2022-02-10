@@ -20,7 +20,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: andikamc/ubuntu-xray
+          images: andikamc/ubuntu-trojan-go
       - name: Declare some variables
         id: vars
         shell: bash
@@ -31,5 +31,5 @@ jobs:
         with:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
-          tags: andikamc/ubuntu-xray:latest
+          tags: andikamc/ubuntu-trojan-go:latest
           labels: ${{ steps.meta.outputs.labels }}

@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+#
+mkdir /usr/local/bin/cloudreve && cd /usr/local/bin/cloudreve
+wget https://github.com/cloudreve/Cloudreve/releases/download/3.2.1/cloudreve_3.2.1_linux_amd64.tar.gz
+tar -zxvf cloudreve_3.2.1_linux_amd64.tar.gz
+chmod +x ./cloudreve
+
+#
+echo "[Unit]" > /lib/systemd/system/cloudreve.service
+echo "Description=Cloudreve" >> /lib/systemd/system/cloudreve.service
+echo "Documentation=https://docs.cloudreve.org" >> /lib/systemd/system/cloudreve.service
+echo "After=network.target" >> /lib/systemd/system/cloudreve.service
+echo "After=mysqld.service" >> /lib/systemd/system/cloudreve.service
+echo "Wants=network.target" >> /lib/systemd/system/cloudreve.service
+echo "" >> /lib/systemd/system/cloudreve.service
+echo "[Service]" >> /lib/systemd/system/cloudreve.service
+echo "WorkingDirectory=/usr/local/bin/cloudreve" >> /lib/systemd/system/cloudreve.service
+echo "ExecStart=/usr/local/bin/cloudreve/cloudreve" >> /lib/systemd/system/cloudreve.service
+echo "Restart=on-abnormal" >> /lib/systemd/system/cloudreve.service
+echo "RestartSec=5s" >> /lib/systemd/system/cloudreve.service
+echo "KillMode=mixed" >> /lib/systemd/system/cloudreve.service
+echo "" >> /lib/systemd/system/cloudreve.service
+echo "StandardOutput=null" >> /lib/systemd/system/cloudreve.service
+echo "StandardError=syslog" >> /lib/systemd/system/cloudreve.service
+echo "" >> /lib/systemd/system/cloudreve.service
+echo "[Install]" >> /lib/systemd/system/cloudreve.service
+echo "WantedBy=multi-user.target" >> /lib/systemd/system/cloudreve.service
+
+#
+echo "[System]" > /usr/local/bin/cloudreve/conf.ini
+echo "Mode = master" >> /usr/local/bin/cloudreve/conf.ini
+echo "Debug = false" >> /usr/local/bin/cloudreve/conf.ini
+echo "Listen = :5212" >> /usr/local/bin/cloudreve/conf.ini
+echo "" >> /usr/local/bin/cloudreve/conf.ini
+echo "[UnixSocket]" >> /usr/local/bin/cloudreve/conf.ini
+echo "Listen = /run/cloudreve.sock" >> /usr/local/bin/cloudreve/conf.ini
+
+#
+systemctl enable cloudreve

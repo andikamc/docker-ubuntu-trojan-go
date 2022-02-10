@@ -3,15 +3,16 @@
     "local_addr": "0.0.0.0",
     "local_port": 443,
     "remote_addr": "127.0.0.1",
-    "remote_port": 80,
+    "remote_port": 81,
     "password": [
        "your_password"
     ],
     "ssl": {
-       "cert": "/opt/trojan-go/certificate/fullchain.crt",
-       "key": "/opt/trojan-go/certificate/private.key",
-       "prefer_server_cipher": true,
-       "sni": "sni.dknet.my.id"
+      "verify": false,
+      "verify_hostname": false,
+       "cert": "/opt/certificates/fullchain.crt",
+       "key": "/opt/certificates/private.key",
+       "prefer_server_cipher": true
     },
     "router": {
        "enabled": true,
@@ -37,7 +38,7 @@
        "host": "ws.dknet.my.id"
     },
     "shadowsocks": {
-       "enabled": true,
+       "enabled": false,
        "method": "AES-128-GCM",
        "password": "dknetid"
     },
