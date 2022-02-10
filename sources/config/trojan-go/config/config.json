@@ -1,0 +1,80 @@
+{
+    "run_type": "server",
+    "local_addr": "0.0.0.0",
+    "local_port": 443,
+    "remote_addr": "127.0.0.1",
+    "remote_port": 80,
+    "password": [
+       "your_password"
+    ],
+    "ssl": {
+       "cert": "/opt/trojan-go/certificate/fullchain.crt",
+       "key": "/opt/trojan-go/certificate/private.key",
+       "prefer_server_cipher": true,
+       "sni": "sni.dknet.my.id"
+    },
+    "router": {
+       "enabled": true,
+       "block": [
+          "geoip:private"
+       ],
+       "geoip": "/opt/trojan-go/geoip.dat",
+       "geosite": "/opt/trojan-go/geosite.dat"
+    },
+    "tcp": {
+       "no_delay": true,
+       "keep_alive": true,
+       "prefer_ipv4": false
+    },
+    "mux": {
+       "enabled": false,
+       "concurrency": 8,
+       "idle_timeout": 60
+    },
+    "websocket": {
+       "enabled": false,
+       "path": "/dkws",
+       "host": "ws.dknet.my.id"
+    },
+    "shadowsocks": {
+       "enabled": true,
+       "method": "AES-128-GCM",
+       "password": "dknetid"
+    },
+    "transport_plugin": {
+       "enabled": false,
+       "type": "",
+       "command": "",
+       "option": "",
+       "arg": [],
+       "env": []
+    },
+    "forward_proxy": {
+       "enabled": false,
+       "proxy_addr": "",
+       "proxy_port": 0,
+       "username": "",
+       "password": ""
+    },
+    "mysql": {
+       "enabled": false,
+       "server_addr": "localhost",
+       "server_port": 3306,
+       "database": "",
+       "username": "",
+       "password": "",
+       "check_rate": 60
+    },
+    "api": {
+       "enabled": false,
+       "api_addr": "",
+       "api_port": 0,
+       "ssl": {
+          "enabled": false,
+          "key": "",
+          "cert": "",
+          "verify_client": false,
+          "client_cert": []
+       }
+    }
+ }

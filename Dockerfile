@@ -1,18 +1,20 @@
 FROM andikamc/ubuntu-baseline:bionic
-ADD /sources/images/xray-linux-64.tar.gz /opt/xray
 
 # Update package list
 RUN apt -y update && \
     apt -y upgrade
+
+# Install required package
+RUN apt install -y cmake make socat && \
+    apt install -y libssl-dev libnspr4-dev libnss3-dev pkg-config zip unzip
 
 # Configure Command
 ADD /sources/config /tmp
 ADD /sources/commands /tmp
 RUN dos2unix /tmp/configure-* && \
     chmod +x /tmp/configure-* && \
-    sh -c /tmp/configure-xray && \
-    sh -c /tmp/configure-udpgw && \
-    sh -c /tmp/configure-nginx
+    sh -c /tmp/configure-trojan-go && \
+    sh -c /tmp/configure-udpgw
 
 # Clear Temp
 RUN rm /etc/timezone && \
@@ -28,4 +30,4 @@ RUN rm /etc/timezone && \
 # Container Environment
 WORKDIR /home/vhosts
 LABEL maintainer="Andika Muhammad Cahya <andkmc99@gmail.com>"
-LABEL container="TROJAN SERVER+TLS+gRPC (XRAY)"
+LABEL container="TROJAN SERVER+WS (TROJAN-GO)"
