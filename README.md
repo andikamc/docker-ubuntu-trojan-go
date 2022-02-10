@@ -9,7 +9,6 @@ Run Trojan-GO inside Ubuntu Container
 ### Installed Features
 - Trojan-GO
 
-
 ### Usage
 1. Run the container as a daemon
     ```sh
